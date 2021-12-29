@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+	<f:event listener="#{beanSegLogin.actionVerificarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+<h:head>
+	<title>Catalogo</title>
+</h:head>
+<body>
+	<p:growl>
+		<p:autoUpdate />
+	</p:growl>
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Regresar" icon="pi pi-home" action="/menu" />
+			<p:menuitem value="Carrito" icon="pi pi-shopping-cart"
+				action="#{beanAlqVendedor.actionCargarMenuCarrito()}" />
+			<p:menuitem value="Alquileres" icon="pi pi-list"
+				action="#{beanAlqVendedor.actionCargarMenuAlquileres()}" />
+			<f:facet name="options">
+				<p:menuButton value="#{beanSegLogin.loginDTO.correo}"
+					icon="pi pi-user">
+					<p:menuitem value="Perfil" icon="pi pi-cog"></p:menuitem>
+					<p:menuitem value="Cerrar sesión" icon="pi pi-sign-out"
+						action="#{beanSegLogin.actionCerrarSesion()}"></p:menuitem>
+				</p:menuButton>
+			</f:facet>
+		</p:menubar>
+		<p:staticMessage severity="info" summary="Catálogo de productos"></p:staticMessage>
+	</h:form>
+	<div class="card product">
+		<h:form id="formDatos">
+			<p:dataTable value="#{beanAlqVendedor.listaProductos}" var="p"
+				emptyMessage="Sin registros." rows="12" paginator="true"
+				rowsPerPageTemplate="6,12,16"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				gridIcon="pi pi-th-large" listIcon="pi pi-bars">
+				<p:column field="nombre" headerText="Producto">
+					<h:outputText value="#{p.nombre}" />
+				</p:column>
+				<p:column field="venta" filterable="false" headerText="Precio">
+					<i class="pi pi-dollar" style="font-size: 1rem"></i>
+					<h:outputText value="#{p.venta}" />
+				</p:column>
+				<p:column headerText="Opciones">
+					<p:overlayPanel for="cmdCantidad" showCloseIcon="true">
+						<p:panelGrid columns="1">
+							<h:outputText value="Cantidad:" />
+							<p:inputNumber value="#{beanAlqVendedor.cantidad}" required="true"
+								requiredMessage="Ingrese la cantidad." minValue="1" maxValue="999"/>
+							<p:commandButton value="Agregar" icon="pi pi-save" update="@form"
+								actionListener="#{beanAlqVendedor.actionListenerAgregarProducto(p)}"></p:commandButton>
+						</p:panelGrid>
+					</p:overlayPanel>
+					<p:commandButton icon="pi pi-shopping-cart"
+						value="Agregar al Carrito" id="cmdCantidad">
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</div>
+</body>
+</html>
